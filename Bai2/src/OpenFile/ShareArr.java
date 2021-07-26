@@ -16,7 +16,13 @@ import java.util.List;
  */
 public class ShareArr {
 
-    public synchronized ArrayList<List<Integer>> share() throws IOException {
+//    private  partitions;
+//
+//    public ArrayList<List<Integer>> getPartitions() {
+//        return partitions;
+//    }
+
+    public ArrayList<List<Integer>> share() throws IOException {
         BufferedReaderFile file = new BufferedReaderFile();
         ReadConfig read = new ReadConfig();
         List<Integer> originalList = file.openFile(read.getUrlInput());
@@ -28,8 +34,8 @@ public class ShareArr {
         }
         return partitions;
     }
-    
-    public List<Integer> megre(List<Integer> a, List<Integer> b) throws IOException {
+
+    public List<Integer> merge(List<Integer> a, List<Integer> b) throws IOException {
         List<Integer> c = new ArrayList<Integer>();
         int i = 0, j = 0;
         while (i < a.size() && j < b.size()) {
@@ -41,7 +47,7 @@ public class ShareArr {
                 j++;
             }
         }
-        
+
         while (i < a.size()) {
             c.add(a.get(i));
             i++;
@@ -53,5 +59,19 @@ public class ShareArr {
             j++;
         }
         return c;
+
+    }
+
+    public void getTime() throws IOException {
+        ReadConfig read = new ReadConfig();
+        long startTime = System.currentTimeMillis();
+        ArrayList<List<Integer>> a = share();
+        while (a.size()!=1) {
+            a.add(merge(a.get(0), a.get(1)));
+            a.remove(0);
+            a.remove(1);
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.printf(read.getArrsize()+" elements  => "+(endTime - startTime)+" ms \n");
     }
 }
